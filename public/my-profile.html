@@ -14,31 +14,56 @@
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <script defer src="my-profile.js" type="text/javascript"></script>					        
 </head>
-
-<body>
-    <section class="hero is-fullheight is-default is-bold">
-        <div class="hero-body">
-            <div class="container has-text-centered">
-                <div class="columns is-vcentered">
-                    <div class="column is-4">
-                        <h1 class="title is-2">
-                            Your Profile
-                        </h1>
-                        <h2 class="subtitle is-4">
-                            Log in to create your profile and view your contacts
-                        </h2>
-                        <br>
-                        <p class="has-text-centered">
-                            <a class="button is-medium is-info is-outlined" onclick="signIn()">
-                                Sign In With Google
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
+  <body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-menu">
+        <a class="navbar-item" href="writeNote.html">
+         Add a new note
+        </a>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="section">
+        <div class="columns">
+          <div class="column has-text-centered">
+            <h1 class="title">My Profile</h1><br>
+          </div>
         </div>
-    </section>
-</body>
+        <div id="app" class="columns is-multiline">
+          <!-- Note cards will render here -->
+        </div>
+ <div id="editNoteModal" class="modal">
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <section class="modal-card-body">
+	      <input id="editNoteId" type="hidden">
+              <p class="is-subtitle">Title</p>
+              <input class="input is-normal" id="editTitleInput" type="text">
+              <p class="is-subtitle">Text</p>
+              <input class="input is-normal" id="editTextInput" type="text">
+
+            </section>
+            <footer class="modal-card-foot">
+              <button class="button is-success" onclick="saveEditedNote()">Save changes</button>
+              <button class="button" onclick="closeEditModal()">Cancel</button>
+            </footer>
+          </div>
+        </div>
+         
+        </div>
+
+      </div>
+    <footer class="footer">
+      <div class="container">
+        <div class="content has-text-centered">
+          <p>
+            <strong>Bulma</strong> by <a href="http://jgthms.com">Jeremy Thomas</a>.
+            The source code is licensed <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. <br>
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
 
 </html>
 
