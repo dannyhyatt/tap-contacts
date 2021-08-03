@@ -53,6 +53,7 @@ const addInfo = () => {
     };
     console.log(info);
     dbRef.set({
+        fullName: document.querySelector("#fullName-input").value,
         username: document.querySelector("#username-input").value,
         contacts: info,
         imageUrl: "https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg"
