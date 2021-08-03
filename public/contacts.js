@@ -19,11 +19,13 @@ window.onload = (event) => {
                 let data = snapshot.val();
                 for(let key in data) {
                     if(key.split('-')[0] == username) {
+                        // username comes first in local key so don't change it
                         if(contacts[key] == undefined) {
                             contacts[key] = {};
                         }
                         contacts[key]['isSharing'] = data[key];
                     } else if(key.split('-')[1] == username) {
+                        key = key.split('-').reverse().join('-');
                         if(contacts[key] == null) contacts[key] = {};
                         contacts[key]['sharedContactsWithMe'] = data[key];
                     }
