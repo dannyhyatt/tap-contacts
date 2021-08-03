@@ -17,7 +17,7 @@ const createCard = () => {
     return `<div class="card mb-5">  
                     <div class="card-content"> 
                         <div class="content columns">
-                            <div class="select column is-2">
+                            <div class="select column is-narrow">
                                 <select class="dropdowns">
                                     <option>Snapchat</option>
                                     <option>Instagram</option>
