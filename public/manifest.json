@@ -1,0 +1,16 @@
+{
+  "name": "Tap Notes",
+  "short_name": "Tap Notes",
+  "start_url": "index.html",
+  "scope": "./",
+  "icons": [
+    {
+      "src": "icons8-contacts-215.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#ffd31d",
+  "background_color": "#00d1b2",
+  "display": "standalone"
+}
