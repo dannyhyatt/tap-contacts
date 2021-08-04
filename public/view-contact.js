@@ -31,16 +31,56 @@ window.onload = (event) => {
 const showContact = () => {
     const contactName = (new URL(window.location.href)).searchParams.get('username');
     const dbRef = firebase.database().ref(`shared-contacts/${username}-${contactName}`);
+    
     const contactInfo = document.querySelector("#contact-info");
     changeName(contactName);
     dbRef.on('value', (snapshot) => {
-    const data = snapshot.val();
-    for (let key in data) {
-        let newContact = data[key].contact + "<br>" + showLink(data[key].type,data[key].contact);
-         contactInfo.innerHTML += createCard(data[key].type,newContact);
-    };
+    if (snapshot.exists()) {
+        const data = snapshot.val();
+        for (let key in data) {
+            let newContact = data[key].contact + "<br>" + showLink(data[key].type,data[key].contact);
+            contactInfo.innerHTML += createCard(data[key].type,newContact);
+        }
+    }
+    else {
+        const addContactBtn = document.querySelector("#btn");
+        addContactBtn.classList.remove("hidden");
+    } 
   });
 };
+
+const addContact = () => {
+    const contactName = (new URL(window.location.href)).searchParams.get('username');
+    const userRef = firebase.database().ref('users');
+
+    let contact = [];
+    
+    userRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        for (let key in data){
+            if(data[key].username == contactName) {
+                for (let i in data[key].contacts){
+                    console.log(data[key].contacts[i]);
+                    contact.push({
+                        contact: data[key].contacts[i].contact,
+                        type: data[key].contacts[i].type
+                    });
+                };    
+            };
+        }
+        const contactInfo = {};
+        contactInfo[`${username}-${contactName}`] = contact;
+        console.log(contactInfo);
+        const dbRef = firebase.database().ref('shared-contacts/');
+        dbRef.update(contactInfo);
+        document.querySelector("#btn").classList.add("hidden");
+
+    });
+    
+    
+    
+};
+
 
 const createCard = (type,contact) => {
     return `<div class="column is-one-quarter">
