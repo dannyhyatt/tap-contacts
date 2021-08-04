@@ -29,23 +29,52 @@
             <h2 class="subtitle" id="username">username</h2>
           </div>
         </div>
+
         <div id="app" class="columns is-multiline">
-          <!-- Note cards will render here -->
+          <!-- Contact Info will show here -->
         </div>
-        <div id="editNoteModal" class="modal">
-          <div class="modal-background"></div>
-          <div class="modal-card">
+        <!--Edit Contact Info Modal-->
+        <div id="editModal" class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
             <section class="modal-card-body">
-	          <input id="editNoteId" type="hidden">
-              <p class="is-subtitle">Title</p>
-              <input class="input is-normal" id="editTitleInput" type="text">
-              <p class="is-subtitle">Text</p>
-              <input class="input is-normal" id="editTextInput" type="text">
+	            <input id="editId" type="hidden">
+                <p class="is-subtitle">Type</p>
+                <input class="input is-normal" id="editTypeInput" type="text">
+                <p class="is-subtitle">Contact</p>
+                <input class="input is-normal" id="editContactInput" type="text">
             </section>
             <footer class="modal-card-foot">
               <button class="button is-success" onclick="saveEditedNote()">Save changes</button>
               <button class="button" onclick="closeEditModal()">Cancel</button>
             </footer>
+          </div>
+        </div>
+        <p class="has-text-centered">
+            <a id="btn" class=" button is-medium is-info is-outlined" onclick = addMoreInfo()>
+                Add More Contact Info
+            </a>
+        </p>
+        <!--New Contact Info Modal -->
+        <div id="newModal" class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Add New Contact Information</p>
+                    <button class="delete" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                    <input id="newId" type="hidden">
+                    <p class="is-subtitle">Type: </p>
+                    <input class="input is-normal" id="newTypeInput" type="text">
+                    <p class="is-subtitle">Contact: </p>
+                    <input class="input is-normal" id="newContactInput" type="text">
+                    
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success" onclick="saveNew()">Save info</button>
+                    <button class="button" onclick="closeNewModal()">Cancel</button>
+                </footer>
           </div>
         </div>
       </div>
