@@ -1,17 +1,31 @@
 let googleUserId;
+let username;
 
 window.onload = (event) => {
-  // Use this to retain user state between html pages.
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      console.log('Logged in as: ' + user.displayName);
-      googleUserId = user.uid;
-      getContacts(googleUserId);
-    } else {
-      // If not logged in, navigate back to login page.
-      window.location = 'index.html'; 
-    };
-  });
+    // Use this to retain user state between html pages.
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+        console.log('Logged in as: ' + user.displayName);
+        googleUserId = user.uid;
+        getContacts(googleUserId);
+        } else {
+        // If not logged in, navigate back to login page.
+        window.location = 'index.html'; 
+        };
+    });
+    // does init.js do this?
+    // edit: it does
+    // probably should remove this
+    // const firebaseConfig = {
+    //     apiKey: "AIzaSyC4EcCqzZco5YqASogxwoT0bBOYuxXCr18",
+    //     authDomain: "tap-contacts.firebaseapp.com",
+    //     databaseURL: "https://tap-contacts-default-rtdb.firebaseio.com",
+    //     projectId: "tap-contacts",
+    //     storageBucket: "tap-contacts.appspot.com",
+    //     messagingSenderId: "472243615275",
+    //     appId: "1:472243615275:web:a834966e8aecaf3d139c6e"
+    // };
+    // firebase.initializeApp(firebaseConfig);
 };
 
 
@@ -20,11 +34,16 @@ const getContacts = (userId) => {
     console.log(userId)
   //   console.log(userId)
    //  console.log(userId.iud)
-  const contactsRef = firebase.database().ref(`users/${userId}/contacts`);
+  const contactsRef = firebase.database().ref(`users/${userId}`);
   contactsRef.on('value', (snapshot) => {
     const data = snapshot.val();
      console.log(data);
-    renderDataAsHtml(data);
+     username = data.username;
+     document.querySelector('#username').innerText = data.username;
+     document.querySelector('#fullName').innerText = data.fullName;
+     console.log('frick: ' + data.imageUrl);
+     document.querySelector('#profile-pic').src = data.imageUrl;
+    renderDataAsHtml(data.contacts);
   });
 };
 
@@ -99,3 +118,23 @@ const createCard = (info, contactId) => {
   return innerHTML;
 };
 
+
+
+const inputElement = document.getElementById("input");
+inputElement.addEventListener("change", (e) => {
+    console.log('heyo');
+    const file = inputElement.files[0];
+    if(!file.type.startsWith('image/')) return;
+    console.log('its an image!');
+    // because it's just username.image you could really just take out the whole
+    // imageUrl field for each user in the db
+    var storageLocation = firebase.storage().ref().child(`${username}.image`);
+    storageLocation.put(file).then((snapshot) => {
+        console.log('Uploaded a blob or file!');
+        storageLocation.getDownloadURL().then((url) => {
+            const dbRef = firebase.database().ref(`users/${googleUserId}`).update({
+                'imageUrl' : url
+            }).then((e) => location.reload());
+        });
+    });
+}, false);

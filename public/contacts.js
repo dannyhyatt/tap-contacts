@@ -14,8 +14,10 @@ window.onload = (event) => {
       const userRef = firebase.database().ref(`users/${user.uid}`);
       userRef.on('value', (snapshot) => {
         if (snapshot.exists()) {
-            let username = snapshot.val().username;
+            let data = snapshot.val();
+            let username = data.username;
             console.log('username: ' + username);
+            document.querySelector('#profile-pic').src = data.imageUrl;
             const contactsRef = firebase.database().ref(`shared-contacts/`);
             contactsRef.on('value', (snapshot) => {
                 let data = snapshot.val();
