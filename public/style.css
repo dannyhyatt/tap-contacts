@@ -2,6 +2,9 @@
   display: none;
 }
 
+.input{
+    margin-bottom: 50px;
+}
 
 #app ul {
   margin: 0;
