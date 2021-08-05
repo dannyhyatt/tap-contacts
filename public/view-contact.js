@@ -9,10 +9,14 @@ window.onload = (event) => {
       console.log('Logged in as: ' + user.displayName);
       googleUser = user;
       const userRef = firebase.database().ref(`users/${user.uid}`);
+            
       userRef.on('value', (snapshot) => {
         if (snapshot.exists()) {
-            username = snapshot.val().username;
+            let data = snapshot.val();
+            username = data.username;
             console.log('username: ' + username);
+            document.querySelector('#profile-pic').src = data.imageUrl;
+            document.querySelector("#contacts-profile-pic").style = `background-image: url('${data.imageUrl}');`;
             showContact();
         }
         else {
@@ -25,8 +29,6 @@ window.onload = (event) => {
     };
   });
 };
-
-
 
 const showContact = () => {
     const contactName = (new URL(window.location.href)).searchParams.get('username');
@@ -82,17 +84,11 @@ const addContact = () => {
 
 
 const createCard = (type,contact) => {
-    return `<div class="column is-one-quarter">
+    return `<div class="column is-one-quarter is-12-mobile">
                 <div class="card"> 
-                    <header class="card-header"> 
-                        <p class="card-header-title"> 
-                            ${type}&nbsp;
-                            <img src="${addIcon(type)}" width="20" height="20"> 
-                        </p> 
-                    </header> 
-                    <div class="card-content"> 
-                        <div class="content">
-                            ${contact} 
+                    <div class="card-content">
+                        <div class="content" style="display: flex; flex-direction: row; align-items: center;">
+                            <img src="${addIcon(type)}" style="display:inline; width: 2rem; height: 2rem" class="mr-2"> ${contact} 
                         </div>
                     </div> 
                 </div>

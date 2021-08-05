@@ -108,8 +108,6 @@ const searchNearby = () => {
         alert('You need to allow location services or use a device that is capable of determining your location for this feature.');
         return;
     }
-
-    
 }
 
 // thank you, w3schools
