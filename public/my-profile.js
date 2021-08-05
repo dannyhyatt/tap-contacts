@@ -164,7 +164,7 @@ const closeNewModal = () => {
 
 const saveNew = () => {
     const contactId = document.querySelector('#newId').value;
-    const contactType = document.querySelector('#newTypeInput').value;
+    const contactType = document.querySelector('#types').value;
     const contactInput = document.querySelector('#newContactInput').value;
     const contactDetails = {
         type: contactType,
