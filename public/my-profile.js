@@ -49,6 +49,7 @@ const getContacts = (userId) => {
      document.querySelector('#fullName').innerText = data.fullName;
      //console.log('frick: ' + data.imageUrl);
      document.querySelector('#profile-pic').src = data.imageUrl;
+     document.querySelector(".center-cropped").style = `background-image: url('${data.imageUrl}');`;
     renderDataAsHtml(data.contacts);
   });
 };

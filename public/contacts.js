@@ -18,6 +18,7 @@ window.onload = (event) => {
             let username = data.username;
             console.log('username: ' + username);
             document.querySelector('#profile-pic').src = data.imageUrl;
+            document.querySelector("#contacts-profile-pic").style = `background-image: url('${data.imageUrl}');`;
             const contactsRef = firebase.database().ref(`shared-contacts/`);
             contactsRef.on('value', (snapshot) => {
                 let data = snapshot.val();
@@ -75,7 +76,9 @@ const createCard = (user) => {
                 <div class="card-content columns is-mobile is-vcentered is-flex-direction-row">
                     <div class="column is-3-mobile is-1-desktop">
                         <figure class="image is-64x64">
-                            <img class="is-rounded" src="${user.imageUrl}">
+                            <div class="center-cropped" id="contacts-profile-pic" style="background-image: url('${user.imageUrl}');">
+                                <img class="is-rounded" id="profile-pic" src="${user.imageUrl}">
+                            </div>
                         </figure>
                     </div>
                     <div class="column is-9 is-8-mobile">
