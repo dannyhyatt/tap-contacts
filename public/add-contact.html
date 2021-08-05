@@ -41,17 +41,27 @@
 </head>
 
 <body>
-    <section  class =  "has-text-centered">
-        
-    <section class="hero is-small is-primary has-text-centered">
-      <div class="hero-body">
-        <p class="title" style="margin-top: auto; margin-bottom: auto;">
-          Add Contact
-        </p>
-      </div>
+<section  class = "has-text-centered">
+    <section class="hero is-small is-primary has-text-left">
+        <div class="container" style="width:100%">
+            <div class="hero-body is-flex is-flex-direction-row is-justify-content-space-between">
+                <p class="title my-auto" style="margin-top: auto; margin-bottom: auto;" id="contactName">
+                Add Contact
+                </p>
+                <div class="links is-flex is-flex-direction-row">
+                    <a href="/my-profile.html">
+                        <figure class="image is-64x64">
+                            <div class="center-cropped" id="contacts-profile-pic" style="background-image: url('https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg');">
+                                <img class="is-rounded" id="profile-pic" src="https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg">
+                            </div>
+                        </figure>
+                    </a>
+                </div>
+            </div>
+        </div>
     </section>
     <div class="container">
-        <section class="section">
+        <section class="section pb-0">
             <input id="newContact-input" class="input is-primary is-large" type="text" placeholder="Enter username">
         </section>  
         <section class="section">

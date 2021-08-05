@@ -6,6 +6,15 @@ window.onload = (event) => {
     if (user) {
       console.log('Logged in as: ' + user.displayName);
       googleUserId = user.uid;
+
+      const userRef = firebase.database().ref(`users/${user.uid}`);
+      userRef.on('value', (snapshot) => {
+        if (snapshot.exists()) {
+            let data = snapshot.val();
+            document.querySelector('#profile-pic').src = data.imageUrl;
+            document.querySelector("#contacts-profile-pic").style = `background-image: url('${data.imageUrl}');`;
+        }
+      });      
       getContacts(googleUserId);
     } else {
       // If not logged in, navigate back to login page.
