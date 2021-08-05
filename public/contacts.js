@@ -1,5 +1,6 @@
 // first get their username with their google account
 let googleUser;
+let myUsername;
 
 let contacts = {};
 let contactUsernames = [];
@@ -16,6 +17,8 @@ window.onload = (event) => {
         if (snapshot.exists()) {
             let data = snapshot.val();
             let username = data.username;
+            // da global var
+            myUsername = username;
             console.log('username: ' + username);
             document.querySelector('#profile-pic').src = data.imageUrl;
             const contactsRef = firebase.database().ref(`shared-contacts/`);
@@ -103,8 +106,50 @@ const searchNearby = () => {
 // thank you, w3schools
 function getLocation() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
+    navigator.geolocation.getCurrentPosition((e) => {
+        console.log('e: ');
+        console.log(e);
+        const userRef = firebase.database().ref(`location/${myUsername}`);
+        userRef.set([e.coords.latitude, e.coords.longitude, new Date().toISOString()]).then((_) => {
+            console.log('done');
+            const othersRef = firebase.database().ref(`location/`);
+            othersRef.on('value', (snapshot) => {
+                let data = snapshot.val();
+                for(let key in data) {
+                    console.log('key: ' + key);
+                    console.log(data);
+                    console.log(calcCrow(e.coords.latitude, e.coords.longitude, data[key][0], data[key][1]));
+                    console.log(Date.parse(data[key][2]));
+                    console.log(Date.parse(new Date().toISOString()));
+                    // check to see they are within 0.5 km and tapped the location button less than a minute ago and it wasn't from your username
+                    if(calcCrow(e.coords.latitude, e.coords.longitude, data[key][0], data[key][1]) < 0.5 && Math.abs(Date.parse(new Date().toISOString()) - Date.parse(data[key][2]) < 60000) && key != myUsername) {
+                        if(confirm(`Would you like to add ${key} as a contact?`)) window.location.href = `/view-contact.html?username=${key}`;
+                    }
+                }
+            });            
+        });
+        
+    });
   } else {
     return false;
   }
+}
+
+// thank you, derek
+function calcCrow(lat1, lon1, lat2, lon2) {
+    var R = 6371; // radius of the earth
+    var dLat = toRad(lat2-lat1);
+    var dLon = toRad(lon2-lon1);
+    var lat1 = toRad(lat1);
+    var lat2 = toRad(lat2);
+
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var d = R * c;
+    return d;
+}
+
+function toRad(Value) {
+    return Value * Math.PI / 180;
 }
