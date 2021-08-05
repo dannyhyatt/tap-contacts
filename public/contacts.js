@@ -52,7 +52,13 @@ window.onload = (event) => {
                             cardsHTML += createCard(data[key]);
                         }
                     }
+                    
                     document.querySelector('#cards-container').innerHTML = cardsHTML;
+                    console.log(cardsHTML)
+                    if (cardsHTML == ''){
+                        console.log("here")
+                        document.querySelector('#no-contacts').innerHTML = `<h2> Add Some Contacts to see their information! </h2>`;
+                    }
                 });
             });
         }
