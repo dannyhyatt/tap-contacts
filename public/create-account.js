@@ -22,8 +22,8 @@ const createCard = () => {
                                     <option>Instagram</option>
                                     <option>LinkedIn</option>
                                     <option>Phone #</option>
-                                    <option>email</option>
-                                    <option>address</option>
+                                    <option>Email</option>
+                                    <option>Address</option>
                                 </select>
                             </div>
                             <div class="column">
