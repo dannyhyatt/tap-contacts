@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <title>Tap Contacts</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
     <link rel="stylesheet" href="style.css" type="text/css">
@@ -20,11 +22,13 @@
       <div class="section">
         <div class="columns">
           <div class="column has-text-centered">
-            <figure class="image is-128x128 mx-auto" style="margin:auto">
-                <img class="is-rounded" id="profile-pic" src="https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg">
-            </figure>
-            Change profile picture:<br>
-            <input type="file" id="input">
+              <!-- when you click on the label, it triggers input type=file -->
+            <label for="input">
+                <figure class="image is-128x128 mx-auto" style="margin:auto">
+                    <img class="is-rounded" id="profile-pic" src="https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg">
+                </figure>
+            </label>
+            <input type="file" id="input" style="display: none">
             <h1 class="title mt-4" id="fullName">My Profile</h1>
             <h2 class="subtitle" id="username">username</h2>
           </div>

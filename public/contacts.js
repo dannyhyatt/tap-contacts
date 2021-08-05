@@ -72,14 +72,14 @@ const createCard = (user) => {
     console.log(user);
     return `<a href="/view-contact.html?username=${user.username}">
             <div class="card my-5">
-                <div class="card-content columns is-vcentered is-flex-direction-row">
-                    <div class="column is-2-mobile is-1-desktop">
+                <div class="card-content columns is-mobile is-vcentered is-flex-direction-row">
+                    <div class="column is-3-mobile is-1-desktop">
                         <figure class="image is-64x64">
                             <img class="is-rounded" src="${user.imageUrl}">
                         </figure>
                     </div>
-                    <div class="column is-9 is-9-mobile">
-                        <h3 class="subtitle">${user.username}</h3>
+                    <div class="column is-9 is-8-mobile">
+                        <h3 class="subtitle">${user.fullName}</h3>
                     </div>
                     <div class="column is-1-desktop"></div>
                     <div class="column is-1 is-1-mobile">
@@ -88,4 +88,23 @@ const createCard = (user) => {
                 </div>
             </div>
         </a>`;
+}
+
+const searchNearby = () => {
+    const location = getLocation();
+    if(location == false) {
+        alert('You need to allow location services or use a device that is capable of determining your location for this feature.');
+        return;
+    }
+
+    
+}
+
+// thank you, w3schools
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+    return false;
+  }
 }

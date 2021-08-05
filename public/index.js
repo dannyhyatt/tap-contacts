@@ -1,3 +1,5 @@
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION).then((e) => console.log('set persistent cache'));
+
 const signIn = () => {
   var provider = new firebase.auth.GoogleAuthProvider();
   // console.log(provider)
