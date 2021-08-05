@@ -27,8 +27,24 @@ const renderDataAsHtml = (data) => {
     let cards = `<ul>`;
     for(const contactItem in data) {
         const contactInfo = data[contactItem];
-        cards += `<li><input type="checkbox" class = "checkboxes" id="${contactInfo.type}" name="${contactInfo.contact}" value="${contactInfo.type}"><label for="${contactInfo.type}"> ${contactInfo.type}</label><br></li>`    
+       // cards += `<li><input type="checkbox" class = "checkboxes" id="${contactInfo.type}" name="${contactInfo.contact}" value="${contactInfo.type}"><label for="${contactInfo.type}"> ${contactInfo.type}: ${contactInfo.contact}</label><br></li>`    
+   cards+= `<li><div class="card my-5">
+                <div class="card-content columns is-mobile is-vcentered is-flex-direction-row">
+                    <div class="column is-3-mobile is-3-desktop">
+                    </div>
+                    <div class="column is-9 is-8-mobile">
+                    <input type="checkbox" class = "checkboxes" id="${contactInfo.type}" name="${contactInfo.contact}" value="${contactInfo.type}"><label for="${contactInfo.type}"> ${contactInfo.type}: ${contactInfo.contact}</label><br>
+                       
+                    </div>
+                    <div class="column is-1-desktop"></div>
+                    <div class="column is-1 is-1-mobile">
+                        
+                    </div>
+                </div>
+            </div>
+            </li>`
     };
+    // <h3 class="subtitle">${contactInfo.type}: ${contactInfo.contact}</h3>
     cards += `</ul>`
   document.querySelector('#app').innerHTML = cards;
 };
