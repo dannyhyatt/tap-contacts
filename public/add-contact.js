@@ -24,28 +24,36 @@ const getContacts = (userId) => {
 };
 
 const renderDataAsHtml = (data) => {
-    let cards = `<ul>`;
+    let cards = ``;
     for(const contactItem in data) {
         const contactInfo = data[contactItem];
        // cards += `<li><input type="checkbox" class = "checkboxes" id="${contactInfo.type}" name="${contactInfo.contact}" value="${contactInfo.type}"><label for="${contactInfo.type}"> ${contactInfo.type}: ${contactInfo.contact}</label><br></li>`    
-   cards+= `<li><div class="card my-5">
-                <div class="card-content columns is-mobile is-vcentered is-flex-direction-row">
-                    <div class="column is-3-mobile is-3-desktop">
-                    </div>
-                    <div class="column is-9 is-8-mobile">
-                    <input type="checkbox" class = "checkboxes" id="${contactInfo.type}" name="${contactInfo.contact}" value="${contactInfo.type}"><label for="${contactInfo.type}"> ${contactInfo.type}: ${contactInfo.contact}</label><br>
-                       
-                    </div>
-                    <div class="column is-1-desktop"></div>
-                    <div class="column is-1 is-1-mobile">
+   cards+= `<label for="${contactInfo.type}" class="column is-half-tablet is-one-third-desktop is-12-mobile">
+                <div class="card my-5 mr-2">
+                    <div class="card-content columns is-mobile is-vcentered is-flex-direction-row">
+                        <div class="column is-3-mobile is-3-desktop">
+                            <figure class="image is-64x64">
+                                <div class="center-cropped" id="contacts-profile-pic" style="background-image: url('https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg');">
+                                    <img class="is-rounded" id="profile-pic" src="https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg">
+                                </div>
+                            </figure>
+                        </div>
+                        <div class="column is-6 is-7-mobile" style="text-align: left">
+                        <b>${contactInfo.type}:</b><br>
+                        ${contactInfo.contact}<br>
                         
+                        </div>
+                        <div class="column is-2" style="margin-left: auto; margin-right: 1em;">
+                            <span class="checkbox-container">
+                                <input type="checkbox" class="checkboxes" id="${contactInfo.type}" name="${contactInfo.contact}" value="${contactInfo.type}">
+                                <div class="checkbox-img"></div>
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            </li>`
+            </label>`
     };
     // <h3 class="subtitle">${contactInfo.type}: ${contactInfo.contact}</h3>
-    cards += `</ul>`
   document.querySelector('#app').innerHTML = cards;
 };
 
