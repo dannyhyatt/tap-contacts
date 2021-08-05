@@ -14,8 +14,7 @@ window.onload = (event) => {
 };
 
 const createCard = () => {
-    return `<div class="card mb-5">  
-                    <div class="card-content"> 
+    let innerHTML = `<div class="card-content"> 
                         <div class="content columns">
                             <div class="select column is-narrow">
                                 <select class="dropdowns">
@@ -31,13 +30,16 @@ const createCard = () => {
                                 <input class="input contacts" type="text">
                             </div>
                         </div>
-                    </div> 
-                </div>`;
+                    </div>`;
+    let div = document.createElement('div');
+    div.classList = ['card', 'mb-5'];
+    div.innerHTML = innerHTML;
+    return div;
 };
 
 const addCard = () => {
     let card = createCard();
-    document.querySelector("#cards").innerHTML += card;
+    document.querySelector("#cards").appendChild(card);
 };
 
 const addInfo = () => {
