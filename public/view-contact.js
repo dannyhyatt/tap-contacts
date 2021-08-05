@@ -37,7 +37,7 @@ const showContact = () => {
     if (snapshot.exists()) {
         const data = snapshot.val();
         for (let key in data) {
-            let newContact = data[key].contact + "<br>" + showLink(data[key].type,data[key].contact);
+            let newContact = showLink(data[key].type,data[key].contact);
             contactInfo.innerHTML += createCard(data[key].type,newContact);
         }
     }
@@ -113,6 +113,15 @@ const addIcon = (type) => {
     else if (type=="email"){
         link = "https://i.pinimg.com/originals/8f/c3/7b/8fc37b74b608a622588fbaa361485f32.png";
     }
+    else if (type =="Phone #"){
+        link = "https://i.pinimg.com/originals/84/4e/8c/844e8cd4ab26c82286238471f0e5a901.png";
+    }
+    else if (type =="address"){
+        link = "https://image.flaticon.com/icons/png/512/25/25694.png";
+    }
+    else {
+        return "";
+    }
     return link;
 }
 
@@ -142,10 +151,16 @@ const showLink = (type,contact) => {
     else if(type == 'LinkedIn'){
         link = "http://linkedin.com/in/"
     }
+    else if(type=='Phone #'){
+        return `<a href="tel:${contact}">${contact}</a>`;
+    }
+    else if(type=='email'){
+        return `<a href="mailto:${contact}">${contact}</a>`
+    }
     else {
-        return '';
+        return contact;
     }
     if (link) {
-        return `<a href=${link}${contact}>${type}</a>`;
+        return `<a href=${link}${contact}>${contact}</a>`;
     }
 };
