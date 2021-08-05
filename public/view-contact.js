@@ -110,6 +110,9 @@ const addIcon = (type) => {
     else if (type == "LinkedIn") {
         link = "https://image.flaticon.com/icons/png/512/174/174857.png";
     }
+    else if (type=="email"){
+        link = "https://i.pinimg.com/originals/8f/c3/7b/8fc37b74b608a622588fbaa361485f32.png";
+    }
     return link;
 }
 
@@ -126,7 +129,6 @@ const changeName = (contactName) => {
         const name = document.querySelector("#contactName");
         name.innerHTML = `${contactFullName}'s Contact Information`;
     });
-    
 };
 
 const showLink = (type,contact) => {

@@ -50,25 +50,35 @@
             </footer>
           </div>
         </div>
+        <!--Add More Contact Info Button-->
         <p class="has-text-centered">
             <a id="btn" class=" button is-medium is-info is-outlined" onclick = addMoreInfo()>
                 Add More Contact Info
             </a>
         </p>
+
+
         <!--New Contact Info Modal -->
         <div id="newModal" class="modal">
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
                     <p class="modal-card-title">Add New Contact Information</p>
-                    <button class="delete" aria-label="close"></button>
+                    <button class="delete" aria-label="close" onclick="closeNewModal()"></button>
                 </header>
                 <section class="modal-card-body">
                     <input id="newId" type="hidden">
-                    <p class="is-subtitle">Type: </p>
-                    <input class="input is-normal" id="newTypeInput" type="text">
-                    <p class="is-subtitle">Contact: </p>
+                    <p>Type: 
+                        <input class="input is-normal" id="newTypeInput" type="text">
+                    <p> Contact: 
                     <input class="input is-normal" id="newContactInput" type="text">
+                    </p>
+                    <hr>
+                    <div id="checkboxes">
+                        <label>Select which friends you want to share this new information with: </label>
+                        <ul id="contactChecks">
+                        </ul>
+                    </div>
                     
                 </section>
                 <footer class="modal-card-foot">

@@ -153,6 +153,7 @@ const addMoreInfo = () => {
         document.querySelector('#newContactInput').value = contactDetails.contact;
     });**/
     newModal.classList.toggle('is-active');
+    addContactCheckboxes();
 };
 
 const closeNewModal = () => {
@@ -171,6 +172,32 @@ const saveNew = () => {
     contactsRef = firebase.database().ref(`users/${googleUserId}/contacts/`);
     contactsRef.push(contactDetails);
     
+    const checkboxes = document.getElementsByClassName("contactCheckbox");
+    console.log(checkboxes);
+    let sc = [];
+    for (let i = 0; i < checkboxes.length; i++){
+        if (checkboxes[i].checked){
+            let scRef = firebase.database().ref(`shared-contacts/${checkboxes[i].value}-${username}`);
+            console.log(`${checkboxes[i].value}-${username}`);
+            scRef.push(contactDetails);
+        };
+    };
     closeNewModal();
+
 };
+
+const addContactCheckboxes = () => {
+    const dbRef = firebase.database().ref('shared-contacts');
+    dbRef.on('value',(snapshot) => {
+        const data = snapshot.val();
+        const contactChecks = document.querySelector("#contactChecks");
+        let contactCheckboxesHTML = `<li>`;
+        for(let key in data) { 
+            if(key.slice(key.search('-')+1) == username) {
+                contactCheckboxesHTML += `<li><input class="contactCheckbox" type="checkbox" value="${key.slice(0,key.search('-'))}">  ${key.slice(0,key.search('-'))}</li>`
+            }
+        };
+        contactChecks.innerHTML = contactCheckboxesHTML;   
+    });
+};               
 
