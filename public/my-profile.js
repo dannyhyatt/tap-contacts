@@ -8,6 +8,12 @@ window.onload = (event) => {
         console.log('Logged in as: ' + user.displayName);
         googleUserId = user.uid;
         getContacts(googleUserId);
+        const userRef = firebase.database().ref(`users/${user.uid}`);
+        userRef.on('value', (snapshot) => {
+            if (snapshot.exists()) {
+                username = snapshot.val().username;
+            }
+        });
         } else {
         // If not logged in, navigate back to login page.
         window.location = 'index.html'; 
@@ -31,17 +37,17 @@ window.onload = (event) => {
 
 
 const getContacts = (userId) => {
-    console.log(userId)
+    //console.log(userId)
   //   console.log(userId)
    //  console.log(userId.iud)
   const contactsRef = firebase.database().ref(`users/${userId}`);
   contactsRef.on('value', (snapshot) => {
     const data = snapshot.val();
-     console.log(data);
+     //console.log(data);
      username = data.username;
      document.querySelector('#username').innerText = data.username;
      document.querySelector('#fullName').innerText = data.fullName;
-     console.log('frick: ' + data.imageUrl);
+     //console.log('frick: ' + data.imageUrl);
      document.querySelector('#profile-pic').src = data.imageUrl;
     renderDataAsHtml(data.contacts);
   });
@@ -51,26 +57,24 @@ const renderDataAsHtml = (data) => {
   let cards = ``;
   for(const contactItem in data) {
     const contactInfo = data[contactItem];
-    // For each note create an HTML card
     cards += createCard(contactInfo, contactItem)
   };
-  // Inject our string of HTML into our viewNotes.html page
   document.querySelector('#app').innerHTML = cards;
 };
 
 const editContact = (contactId) => {
-  const editNoteModal = document.querySelector('#editNoteModal');
+  const editModal = document.querySelector('#editModal');
   const contactsRef = firebase.database().ref(`users/${googleUserId}/contacts`);
   contactsRef.on('value', (snapshot) => {
     const data = snapshot.val();
-    const noteDetails = data[contactId];
-     console.log("checking" + noteDetails)
-    document.querySelector('#editNoteId').value = contactId;
-    document.querySelector('#editTitleInput').value = noteDetails.type;
-    document.querySelector('#editTextInput').value = noteDetails.contact;
+    const contactDetails = data[contactId];
+    //console.log("checking" + contactDetails)
+    document.querySelector('#editId').value = contactId;
+    document.querySelector('#editTypeInput').value = contactDetails.type;
+    document.querySelector('#editContactInput').value = contactDetails.contact;
   });
 
-  editNoteModal.classList.toggle('is-active');
+  editModal.classList.toggle('is-active');
 };
 
 const deleteContact = (contactId) => {
@@ -78,20 +82,20 @@ const deleteContact = (contactId) => {
 }
 
 const saveEditedNote = () => {
-  const noteId = document.querySelector('#editNoteId').value;
-  const noteTitle = document.querySelector('#editTitleInput').value;
-  const noteText = document.querySelector('#editTextInput').value;
-  const noteEdits = {
-    type: noteTitle,
-    contact: noteText
+  const contactId = document.querySelector('#editId').value;
+  const contactType = document.querySelector('#editTypeInput').value;
+  const contactInput = document.querySelector('#editContactInput').value;
+  const contactEdits = {
+    type: contactType,
+    contact: contactInput
   };
-  firebase.database().ref(`users/${googleUserId}/contacts/${noteId}`).update(noteEdits);
+  firebase.database().ref(`users/${googleUserId}/contacts/${contactId}`).update(contactEdits);
   closeEditModal();
 }
 
 const closeEditModal = () => {
-  const editNoteModal = document.querySelector('#editNoteModal');
-  editNoteModal.classList.toggle('is-active');
+  const editNoteModal = document.querySelector('#editModal');
+  editModal.classList.toggle('is-active');
 };
 
 const createCard = (info, contactId) => {
@@ -138,3 +142,62 @@ inputElement.addEventListener("change", (e) => {
         });
     });
 }, false);
+
+const addMoreInfo = () => {
+    /**const newModal = document.querySelector('#newModal');
+    const contactsRef = firebase.database().ref(`users/${googleUserId}/contacts`);
+    contactsRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        const contactDetails = data[contactId];
+        document.querySelector('#newTypeInput').value = contactDetails.type;
+        document.querySelector('#newContactInput').value = contactDetails.contact;
+    });**/
+    newModal.classList.toggle('is-active');
+    addContactCheckboxes();
+};
+
+const closeNewModal = () => {
+  const newModal = document.querySelector('#newModal');
+  newModal.classList.toggle('is-active');
+};
+
+const saveNew = () => {
+    const contactId = document.querySelector('#newId').value;
+    const contactType = document.querySelector('#newTypeInput').value;
+    const contactInput = document.querySelector('#newContactInput').value;
+    const contactDetails = {
+        type: contactType,
+        contact: contactInput
+    };
+    contactsRef = firebase.database().ref(`users/${googleUserId}/contacts/`);
+    contactsRef.push(contactDetails);
+    
+    const checkboxes = document.getElementsByClassName("contactCheckbox");
+    console.log(checkboxes);
+    let sc = [];
+    for (let i = 0; i < checkboxes.length; i++){
+        if (checkboxes[i].checked){
+            let scRef = firebase.database().ref(`shared-contacts/${checkboxes[i].value}-${username}`);
+            console.log(`${checkboxes[i].value}-${username}`);
+            scRef.push(contactDetails);
+        };
+    };
+    closeNewModal();
+
+};
+
+const addContactCheckboxes = () => {
+    const dbRef = firebase.database().ref('shared-contacts');
+    dbRef.on('value',(snapshot) => {
+        const data = snapshot.val();
+        const contactChecks = document.querySelector("#contactChecks");
+        let contactCheckboxesHTML = `<li>`;
+        for(let key in data) { 
+            if(key.slice(key.search('-')+1) == username) {
+                contactCheckboxesHTML += `<li><input class="contactCheckbox" type="checkbox" value="${key.slice(0,key.search('-'))}">  ${key.slice(0,key.search('-'))}</li>`
+            }
+        };
+        contactChecks.innerHTML = contactCheckboxesHTML;   
+    });
+};               
+

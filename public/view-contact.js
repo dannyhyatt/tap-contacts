@@ -31,7 +31,6 @@ window.onload = (event) => {
 const showContact = () => {
     const contactName = (new URL(window.location.href)).searchParams.get('username');
     const dbRef = firebase.database().ref(`shared-contacts/${username}-${contactName}`);
-    
     const contactInfo = document.querySelector("#contact-info");
     changeName(contactName);
     dbRef.on('value', (snapshot) => {
@@ -87,7 +86,8 @@ const createCard = (type,contact) => {
                 <div class="card"> 
                     <header class="card-header"> 
                         <p class="card-header-title"> 
-                            ${type} 
+                            ${type}&nbsp;
+                            <img src="${addIcon(type)}" width="20" height="20"> 
                         </p> 
                     </header> 
                     <div class="card-content"> 
@@ -99,9 +99,36 @@ const createCard = (type,contact) => {
             </div>`;
 };
 
+const addIcon = (type) => {
+    let link;
+    if (type == "Snapchat") {
+        link = "https://i.pinimg.com/originals/65/a4/24/65a4240ae9174aa1e5f3af541faba57b.jpg";
+    }
+    else if (type == "Instagram") {
+        link =  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/1024px-Instagram_icon.png";
+    }
+    else if (type == "LinkedIn") {
+        link = "https://image.flaticon.com/icons/png/512/174/174857.png";
+    }
+    else if (type=="email"){
+        link = "https://i.pinimg.com/originals/8f/c3/7b/8fc37b74b608a622588fbaa361485f32.png";
+    }
+    return link;
+}
+
 const changeName = (contactName) => {
-    const name = document.querySelector("#contactName");
-    name.innerHTML = `${contactName}'s Contact Information`;
+    const userRef = firebase.database().ref('users');
+    let contactFullName = ""; 
+    userRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        for (let key in data){
+            if(data[key].username == contactName) {  
+                contactFullName = data[key].fullName;
+            };
+        }
+        const name = document.querySelector("#contactName");
+        name.innerHTML = `${contactFullName}'s Contact Information`;
+    });
 };
 
 const showLink = (type,contact) => {

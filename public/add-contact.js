@@ -15,55 +15,41 @@ window.onload = (event) => {
 };;
 
 const getContacts = (userId) => {
-    console.log(userId)
-  //   console.log(userId)
-   //  console.log(userId.iud)
-  const contactsRef = firebase.database().ref(`users/${userId}/contacts`);
-  contactsRef.on('value', (snapshot) => {
-    const data = snapshot.val();
-     console.log(data);
-    renderDataAsHtml(data);
+    const contactsRef = firebase.database().ref(`users/${userId}/contacts`);
+    contactsRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        console.log(data);
+        renderDataAsHtml(data);
   });
 };
 
 const renderDataAsHtml = (data) => {
-  let cards = `<li>`;
-  for(const contactItem in data) {
-    const contactInfo = data[contactItem];
-    // `<ul> ${contactInfo.type}:  ${contactInfo.contact}</ul>`
-    // For each note create an HTML card
-    cards += 
-`<input type="checkbox" class = "checkboxes" id="${contactInfo.type}" name="${contactInfo.contact}" value="${contactInfo.type}">
-<label for="${contactInfo.type}"> ${contactInfo.type}</label><br></br>`    
-   //  cards += `<ul> ${contactInfo.contact} </ul>`
-  };
-  // Inject our string of HTML into our viewNotes.html page
-   cards += `</li>`
+    let cards = `<ul>`;
+    for(const contactItem in data) {
+        const contactInfo = data[contactItem];
+        cards += `<li><input type="checkbox" class = "checkboxes" id="${contactInfo.type}" name="${contactInfo.contact}" value="${contactInfo.type}"><label for="${contactInfo.type}"> ${contactInfo.type}</label><br></li>`    
+    };
+    cards += `</ul>`
   document.querySelector('#app').innerHTML = cards;
 };
 
 
 const addInfo = () => {
     newContact = document.querySelector("#newContact-input").value
-     const userRef = firebase.database().ref(`users/${googleUserId}`);
-      userRef.on('value', (snapshot) => {
-       
-            let username = snapshot.val().username;
-             saveString = `${username}-${newContact}`
-    console.log(saveString)
-        
-    
-  const dbRef = firebase.database().ref(`shared-contacts`);
-   // let dropdowns = document.querySelectorAll(".dropdowns");
-    let checkboxes = document.querySelectorAll(".checkboxes");
-    let info = [];
-    for (let i = 0; i < checkboxes.length; i++){
-        if (checkboxes[i].checked){
-        info.push({
-            type: checkboxes[i].value, 
-            contact: checkboxes[i].name
-        });
-    };
+    const userRef = firebase.database().ref(`users/${googleUserId}`);
+    userRef.on('value', (snapshot) => {
+        let username = snapshot.val().username;
+        saveString = `${newContact}-${username}`;
+        const dbRef = firebase.database().ref(`shared-contacts`);
+        let checkboxes = document.querySelectorAll(".checkboxes");
+        let info = [];
+        for (let i = 0; i < checkboxes.length; i++){
+            if (checkboxes[i].checked){
+            info.push({
+                type: checkboxes[i].value, 
+                contact: checkboxes[i].name
+            });
+        };
     }
     console.log(info);
     let obj = {};
