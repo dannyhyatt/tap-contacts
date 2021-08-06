@@ -37,10 +37,18 @@
         /* background-color: red; */
         background-size: contain;
     }
+    @media only screen and (max-width: 768px) {
+        body {
+            background-color: #00d1b2;
+        }
+        body > * {
+            background-color: #fff;
+        }
+    }
     </style>
 </head>
 
-<body>
+<body class="mb-5">
 <section  class = "has-text-centered">
     <section class="hero is-small is-primary has-text-left">
         <div class="container" style="width:100%">

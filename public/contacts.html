@@ -24,10 +24,18 @@
         margin-top: 14px;
         margin-bottom: 14px;
     }
+    @media only screen and (max-width: 768px) {
+        body {
+            background-color: #00d1b2;
+        }
+        body > * {
+            background-color: #fff;
+        }
+    }
     </style>
 </head>
 
-<body>
+<body class="mb-5">
     <section class="hero is-small is-primary has-text-centered">
         <div class="container" style="width:100%">
             <div class="hero-body is-flex is-flex-direction-row is-justify-content-space-between">

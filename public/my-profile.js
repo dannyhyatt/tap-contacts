@@ -171,19 +171,21 @@ const saveNew = () => {
         contact: contactInput
     };
     contactsRef = firebase.database().ref(`users/${googleUserId}/contacts/`);
-    contactsRef.push(contactDetails);
-    
-    const checkboxes = document.getElementsByClassName("contactCheckbox");
-    console.log(checkboxes);
-    let sc = [];
-    for (let i = 0; i < checkboxes.length; i++){
-        if (checkboxes[i].checked){
-            let scRef = firebase.database().ref(`shared-contacts/${checkboxes[i].value}-${username}`);
-            console.log(`${checkboxes[i].value}-${username}`);
-            scRef.push(contactDetails);
+    contactsRef.once('value', (snapshot) => {
+        console.log('received data: ');
+        contactsRef.update([...snapshot.val(), contactDetails]);
+        const checkboxes = document.getElementsByClassName("contactCheckbox");
+        console.log(checkboxes);
+        let sc = [];
+        for (let i = 0; i < checkboxes.length; i++){
+            if (checkboxes[i].checked){
+                let scRef = firebase.database().ref(`shared-contacts/${checkboxes[i].value}-${username}`);
+                console.log(`${checkboxes[i].value}-${username}`);
+                scRef.push(contactDetails);
+            };
         };
-    };
-    closeNewModal();
+        closeNewModal();
+    });
 
 };
 
@@ -194,8 +196,9 @@ const addContactCheckboxes = () => {
         const contactChecks = document.querySelector("#contactChecks");
         let contactCheckboxesHTML = `<li>`;
         for(let key in data) { 
-            if(key.slice(key.search('-')+1) == username) {
-                contactCheckboxesHTML += `<li><input class="contactCheckbox" type="checkbox" value="${key.slice(0,key.search('-'))}">  ${key.slice(0,key.search('-'))}</li>`
+            if(key.split('-')[0] == username) {
+                let theirUsername = key.slice(key.search('-') + 1, key.length);
+                contactCheckboxesHTML += `<li><input class="contactCheckbox" type="checkbox" value="${theirUsername}" id="checkbox-${theirUsername}">  <label for="checkbox-${theirUsername}">${key.slice(key.search('-') + 1, key.length)}</label></li>`
             }
         };
         contactChecks.innerHTML = contactCheckboxesHTML;   

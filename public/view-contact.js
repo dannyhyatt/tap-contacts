@@ -18,6 +18,7 @@ window.onload = (event) => {
             document.querySelector('#profile-pic').src = data.imageUrl;
             document.querySelector("#contacts-profile-pic").style = `background-image: url('${data.imageUrl}');`;
             showContact();
+            showSharedContacts();
         }
         else {
             window.location = "create-account.html";
@@ -33,17 +34,50 @@ window.onload = (event) => {
 const showContact = () => {
     const contactName = (new URL(window.location.href)).searchParams.get('username');
     const dbRef = firebase.database().ref(`shared-contacts/${username}-${contactName}`);
-    const contactInfo = document.querySelector("#contact-info");
+    const contactInfo = document.querySelector("#my-contact-info");
     changeName(contactName);
     dbRef.on('value', (snapshot) => {
     if (snapshot.exists()) {
+        contactInfo.innerHTML = ''; // clear the cards already inside if there are any
         const data = snapshot.val();
         for (let key in data) {
+            console.log(`sharing 1: ${data[key].type}, ${data[key].contact}`);
             let newContact = showLink(data[key].type,data[key].contact);
             contactInfo.innerHTML += createCard(data[key].type,newContact);
         }
-    }
-    else {
+        const addContactBtn = document.querySelector("#btn");
+        addContactBtn.innerText = 'Edit Contact Info';
+        addContactBtn.classList.remove("hidden");
+        document.querySelectorAll('h1')[1].style.display = 'block';
+    } else {
+        document.querySelectorAll('h1')[1].style.display = 'none';
+        const addContactBtn = document.querySelector("#btn");
+        addContactBtn.classList.remove("hidden");
+    } 
+  });
+};
+
+const showSharedContacts = () => {
+    const contactName = (new URL(window.location.href)).searchParams.get('username');
+    const dbRef = firebase.database().ref(`shared-contacts/${contactName}-${username}`);
+    // the ids and function names are backwards but oh well
+    const contactInfo = document.querySelector("#contact-info");
+    dbRef.on('value', (snapshot) => {
+    if (snapshot.exists()) {
+        contactInfo.innerHTML = ''; // clear the cards already inside if there are any
+        const data = snapshot.val();
+        for (let key in data) {
+            console.log(`sharing 2: ${data[key].type}, ${data[key].contact}`);
+            let newContact = showLink(data[key].type,data[key].contact);
+            contactInfo.innerHTML += createCard(data[key].type,newContact);
+        }
+        
+        const addContactBtn = document.querySelector("#btn");
+        addContactBtn.innerText = 'Edit Contact Info';
+        addContactBtn.classList.remove("hidden");
+        document.querySelectorAll('h1')[0].style.display = 'block';
+    } else {
+        document.querySelectorAll('h1')[0].style.display = 'none';
         const addContactBtn = document.querySelector("#btn");
         addContactBtn.classList.remove("hidden");
     } 
@@ -53,34 +87,92 @@ const showContact = () => {
 const addContact = () => {
     const contactName = (new URL(window.location.href)).searchParams.get('username');
     const userRef = firebase.database().ref('users');
-
     let contact = [];
-    
+    document.querySelector('.modal').classList.add('is-active');
+
     userRef.on('value', (snapshot) => {
         const data = snapshot.val();
-        for (let key in data){
-            if(data[key].username == contactName) {
-                for (let i in data[key].contacts){
-                    console.log(data[key].contacts[i]);
-                    contact.push({
-                        contact: data[key].contacts[i].contact,
-                        type: data[key].contacts[i].type
-                    });
-                };    
-            };
+        for (let key in data) {
+            if(data[key]['username'] == username) {
+                console.log('got the user object!');
+                console.log(data[key]);
+                let modal = document.querySelector('.modal-card-body');
+                modal.innerHTML = '';
+                console.log(data[key].contacts);
+                data[key].contacts.forEach((contact) => {
+                    console.log('adding contact');
+                    modal.innerHTML += `<label for="${contact.type}-${contact.contact}" class="column is-12">
+                        <div class="card my-1 mr-2">
+                            <div class="card-content columns is-mobile is-vcentered is-flex-direction-row">
+                                <div class="column is-3-mobile is-2-desktop">
+                                    <figure class="image is-64x64">
+                                        <div class="center-cropped" id="contacts-profile-pic" style="background-image: url('https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg');">
+                                            <img class="is-rounded" id="profile-pic" src="https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg">
+                                        </div>
+                                    </figure>
+                                </div>
+                                <div class="column is-8 is-5-mobile" style="text-align: left">
+                                <b>${contact.type}</b><br>
+                                ${contact.contact}<br>
+                                </div>
+                                <div class="column is-2" style="margin-left: auto; margin-right: 1em;">
+                                    <span class="checkbox-container">
+                                        <input type="checkbox" class="checkboxes" id="${contact.type}-${contact.contact}" name="${contact.contact}" value="${contact.type}-${contact.contact}">
+                                        <div class="checkbox-img"></div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </label>`;
+                });
+            }
         }
-        const contactInfo = {};
-        contactInfo[`${username}-${contactName}`] = contact;
-        console.log(contactInfo);
-        const dbRef = firebase.database().ref('shared-contacts/');
-        dbRef.update(contactInfo);
-        document.querySelector("#btn").classList.add("hidden");
-
     });
-    
-    
-    
+}
+
+const shareContacts = () => {
+    const dbRef = firebase.database().ref(`shared-contacts/${username}-${(new URL(window.location.href)).searchParams.get('username')}`);
+    let checkedBoxes = document.querySelectorAll('input:checked');
+    let contactsToShare = [];
+    for(let checkbox of checkedBoxes) {
+        contactsToShare.push({
+            type: checkbox.id.split('-')[0],
+            contact: checkbox.id.split('-')[1]
+        });
+    }
+    dbRef.set(contactsToShare).then((e) => {
+        document.querySelector('.modal').classList.remove('is-active');
+    });
 };
+
+// const addContact = () => {
+//     const contactName = (new URL(window.location.href)).searchParams.get('username');
+//     const userRef = firebase.database().ref('users');
+
+//     let contact = [];
+    
+//     userRef.on('value', (snapshot) => {
+//         const data = snapshot.val();
+//         for (let key in data){
+//             if(data[key].username == contactName) {
+//                 for (let i in data[key].contacts){
+//                     console.log(data[key].contacts[i]);
+//                     contact.push({
+//                         contact: data[key].contacts[i].contact,
+//                         type: data[key].contacts[i].type
+//                     });
+//                 };    
+//             };
+//         }
+//         const contactInfo = {};
+//         contactInfo[`${username}-${contactName}`] = contact;
+//         console.log(contactInfo);
+//         const dbRef = firebase.database().ref('shared-contacts/');
+//         dbRef.update(contactInfo);
+//         document.querySelector("#btn").classList.add("hidden");
+
+//     });
+// };
 
 
 const createCard = (type,contact) => {
